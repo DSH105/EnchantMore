@@ -52,9 +52,9 @@ public class EnchantMore extends JavaPlugin {
 				return;
 			}
 		}
-		//reloadConfig();
+		reloadConfig();
 		manager.registerEvents(new EnchantMoreListener(this), this);
-		if (this.getConfig().getBoolean("moveListener")) {
+		if (this.getConfig().getBoolean("moveListener", true)) {
 			manager.registerEvents(new EnchantMorePlayerMoveListener(this), this);
 		}
 		if (getWorldGuard() != null) {
@@ -99,8 +99,6 @@ public class EnchantMore extends JavaPlugin {
 		return true;
 	}
 	public void onDisable() {
-		this.reloadConfig();
-		this.saveConfig();
 	}
 	public boolean verboseLogger() { //Use verbose logger?
 		if (this.getConfig().getBoolean("verboseLogger", false)) {

@@ -970,7 +970,7 @@ public class EnchantMoreListener implements Listener {
     			player.sendMessage(ChatColor.DARK_AQUA + "Time: " + ChatColor.AQUA + world.getFullTime());
     			player.sendMessage(ChatColor.DARK_AQUA + "Sea Level: " + ChatColor.AQUA + world.getSeaLevel());
     			player.sendMessage(ChatColor.DARK_AQUA + "Weather: " + ChatColor.AQUA + world.getWeatherDuration());
-    			player.sendMessage(ChatColor.DARK_AQUA + "Block: " + ChatColor.AQUA + target.getTypeId() + ";" + target.getData());
+    			player.sendMessage(ChatColor.DARK_AQUA + "Block: " + ChatColor.AQUA + target.getTypeId() + ";" + target.getData() + " (" + Material.getMaterial(target.getTypeId()) + ")");
     			player.sendMessage(ChatColor.DARK_AQUA + "Light: " + ChatColor.AQUA + target.getLightLevel() + " (" + target.getLightFromSky() + "/" + target.getLightFromBlocks() + ")");
     			player.sendMessage(
     					ChatColor.DARK_AQUA + "Data: " + ChatColor.AQUA +
