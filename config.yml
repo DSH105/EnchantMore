@@ -12,7 +12,13 @@ verboseLogger: false
 #
 # If effects are disabled, send a message to players letting them know about it. Cooldown is configurable (ticks)
 debugDisabledEffects: true
-disableMsgCooldownTicks: 6000    # Default: 5 minutes
+disableMsgCooldownTicks: 6000    # Default: 5 minutes (6000 ticks)
+#
+# Sends a permission message if the player doesn't have the require permission
+usePermissions: true
+sendPermissionMessage: true
+useCooldown: false
+permMsgCooldownTicks: 6000    # Default: 5 minutes (6000 ticks)
 #
 # Listen for player movement
 # Required for Boots + Power and Boots + Flame but can be disabled for performance reasons.

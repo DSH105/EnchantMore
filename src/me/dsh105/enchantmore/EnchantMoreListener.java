@@ -123,7 +123,7 @@ public class EnchantMoreListener implements Listener {
     final static Enchantment AQUA_AFFINITY = Enchantment.WATER_WORKER;
     final static Enchantment SHARPNESS = Enchantment.DAMAGE_ALL;
     final static Enchantment SMITE = Enchantment.DAMAGE_UNDEAD;
-    final static Enchantment BANE = Enchantment.DAMAGE_ARTHROPODS;
+    final static Enchantment BANE_OF_ARTHROPODS = Enchantment.DAMAGE_ARTHROPODS;
     final static Enchantment KNOCKBACK = Enchantment.KNOCKBACK;
     final static Enchantment FIRE_ASPECT = Enchantment.FIRE_ASPECT;
     final static Enchantment LOOTING = Enchantment.LOOT_BONUS_MOBS;
@@ -134,7 +134,7 @@ public class EnchantMoreListener implements Listener {
     final static Enchantment POWER = Enchantment.ARROW_DAMAGE;
     final static Enchantment PUNCH = Enchantment.ARROW_KNOCKBACK;
     final static Enchantment FLAME = Enchantment.ARROW_FIRE;
-    final static Enchantment INFINITE = Enchantment.ARROW_INFINITE;
+    final static Enchantment INFINITY = Enchantment.ARROW_INFINITE;
     
     static boolean defaultEffectEnabledState = true;
     
@@ -142,10 +142,12 @@ public class EnchantMoreListener implements Listener {
     static ConcurrentHashMap<Integer, String> effectConfigSections = new ConcurrentHashMap<Integer, String>();
     static ConcurrentHashMap<Integer, EnchantMoreItemCategory> itemToCategory = new ConcurrentHashMap<Integer, EnchantMoreItemCategory>();
     static ConcurrentHashMap<String, Enchantment> enchByName = new ConcurrentHashMap<String, Enchantment>();
+    static ConcurrentHashMap<Enchantment, String> nameByEnch = new ConcurrentHashMap<Enchantment, String>();
     static ConcurrentHashMap<EnchantMoreItemCategory, Object> categoryToItem = new ConcurrentHashMap<EnchantMoreItemCategory, Object>();
     static Random random = new Random();
     
     static HashSet<String> disableMsgCooldown = new HashSet<String>();
+    static HashSet<String> disablePermMsgCooldown = new HashSet<String>();
     
     final int SPAWN_EGG_ID = 383;
 	
@@ -155,24 +157,77 @@ public class EnchantMoreListener implements Listener {
 		loadConfig();
 	}
 	public static boolean hasEnch(ItemStack item, Enchantment ench, final Player player) { //Check if the item has an enchantment
-		if (item == null) {
-			return true;
-		}
-		if (!getEffectEnabled(item.getTypeId(), ench) && plugin.getConfig().getBoolean("debugDisabledEffects")) { //Check if the effect is disabled in configuration
-			if (!disableMsgCooldown.contains(player.getName())) {
-				player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + item.getType() + " (" + item.getTypeId() + ") + " + ench + " = " + packEnchItem(item.getTypeId(), ench) + " is disabled.");
-				disableMsgCooldown.add(player.getName());
-				
-				BukkitTask task = new BukkitRunnable() {
-					public void run() {
-						disableMsgCooldown.remove(player.getName());
+		if (item.containsEnchantment(ench)) {
+			if ((player.hasPermission(getPermission(item, ench)) && plugin.getConfig().getBoolean("usePermissions")) || !plugin.getConfig().getBoolean("usePermissions")) {
+				if (!getEffectEnabled(item.getTypeId(), ench) && plugin.getConfig().getBoolean("debugDisabledEffects")) { //Check if the effect is disabled in configuration
+					if (!disableMsgCooldown.contains(player.getName())) {
+						player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + item.getType() + " (" + item.getTypeId() + ") + " + ench + " = " + packEnchItem(item.getTypeId(), ench) + " is disabled.");
+						disableMsgCooldown.add(player.getName());
+						
+						BukkitTask task = new BukkitRunnable() {
+							public void run() {
+								disableMsgCooldown.remove(player.getName());
+							}
+						}.runTaskLater(plugin, plugin.getConfig().getInt("disableMsgCooldownTicks", 6000));
 					}
-				}.runTaskLater(plugin, plugin.getConfig().getInt("disableMsgCooldownTicks", 6000));
+					return false;
+				}
+				return item.containsEnchantment(ench);
 			}
-			return false;
+			if (plugin.getConfig().getBoolean("sendPermissionMessage")) {
+				if (plugin.getConfig().getBoolean("useCooldown")) {
+					if (!disablePermMsgCooldown.contains(player.getName())) {
+						player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + item.getType() + " (" + item.getTypeId() + ") + " + ench + " = " + packEnchItem(item.getTypeId(), ench) + " requires " + ChatColor.GOLD + getPermission(item, ench) + ChatColor.RED + " permission.");
+						disablePermMsgCooldown.add(player.getName());
+						
+						BukkitTask task = new BukkitRunnable() {
+							public void run() {
+								disablePermMsgCooldown.remove(player.getName());
+							}
+						}.runTaskLater(plugin, plugin.getConfig().getInt("permMsgCooldownTicks", 6000));
+					}
+				}
+				else {
+					player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + item.getType() + " (" + item.getTypeId() + ") + " + ench + " = " + packEnchItem(item.getTypeId(), ench) + " requires " + ChatColor.GOLD + getPermission(item, ench) + ChatColor.RED + " permission.");
+				}
+			}
 		}
-		return item.containsEnchantment(ench);
+		return false;
 	}
+	public static String getPermission(ItemStack item, Enchantment ench) {
+		if (nameByEnch.get(ench).replace("_", "").toLowerCase() == null || item == null) {
+			return "enchantmore.enchantmore";
+		}
+		if (isHoe(item.getType())) {
+			return "enchantmore.hoe." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isSword(item.getType())) {
+			return "enchantmore.sword." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isPickaxe(item.getType())) {
+			return "enchantmore.pickaxe." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isShovel(item.getType())) {
+			return "enchantmore.shovel." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isAxe(item.getType())) {
+			return "enchantmore.axe." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isHelmet(item.getType())) {
+			return "enchantmore.helmet." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isChestplate(item.getType())) {
+			return "enchantmore.chestplate." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isLeggings(item.getType())) {
+			return "enchantmore.leggings." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		if (isBoots(item.getType())) {
+			return "enchantmore.boots." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+		}
+		return "enchantmore." + item.getType().toString().toLowerCase().replace("_", "") + "." + nameByEnch.get(ench).replace(" ", "").toLowerCase();
+	}
+	
 	public static int getLevel(ItemStack item, Enchantment ench) { //Get the enchantment level
 		//TODO: Add level cap in config
 		//TODO: Permission for overriding max level
@@ -221,6 +276,8 @@ public class EnchantMoreListener implements Listener {
         		enchByName.put(enchName.toLowerCase(), ench);
         		enchByName.put(ench.getName().toLowerCase(), ench);
         		enchByName.put(String.valueOf(id), ench);
+        		
+        		nameByEnch.put(ench, enchName);
         	}
     	}
     	//Items and categories
@@ -392,6 +449,22 @@ public class EnchantMoreListener implements Listener {
 
     public static boolean isAxe(Material m) {
         return itemToCategory.get(m.getId()) == EnchantMoreItemCategory.IS_AXE;
+    }
+    
+    public static boolean isHelmet(Material m) {
+        return itemToCategory.get(m.getId()) == EnchantMoreItemCategory.IS_HELMET;
+    }
+    
+    public static boolean isChestplate(Material m) {
+        return itemToCategory.get(m.getId()) == EnchantMoreItemCategory.IS_CHESTPLATE;
+    }
+    
+    public static boolean isLeggings(Material m) {
+        return itemToCategory.get(m.getId()) == EnchantMoreItemCategory.IS_LEGGINGS;
+    }
+    
+    public static boolean isBoots(Material m) {
+        return itemToCategory.get(m.getId()) == EnchantMoreItemCategory.IS_BOOTS;
     }
 
     public static boolean isFarmBlock(Material m) {
@@ -947,7 +1020,7 @@ public class EnchantMoreListener implements Listener {
     			damage(item, player);
     		}
     		//Hoe + Bane Of Arthropods = Set Weather
-    		if (hasEnch(item, BANE, player)) {
+    		if (hasEnch(item, BANE_OF_ARTHROPODS, player)) {
     			if (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK) {
     				world.setStorm(true);
     			}
@@ -1340,7 +1413,7 @@ public class EnchantMoreListener implements Listener {
     			}
     		}
     		// Shears + Bane of Arthropods = collect spider eyes
-    		if (hasEnch(item, BANE, player)) {
+    		if (hasEnch(item, BANE_OF_ARTHROPODS, player)) {
     			if (entity instanceof CaveSpider || entity instanceof Spider) {
     				Creature bug = (Creature) entity;
     				// If at least 50% health, cut out eyes, then drop health
@@ -1478,7 +1551,7 @@ public class EnchantMoreListener implements Listener {
             }
 
             // Sword + Infinity = selective invisibility (right-click player)
-            if (hasEnch(item, INFINITE, player)) {
+            if (hasEnch(item, INFINITY, player)) {
                 if (entity instanceof Player) {
                     Player other = (Player)entity;
                     other.hidePlayer(player); // we're invisible to other player
@@ -1499,7 +1572,7 @@ public class EnchantMoreListener implements Listener {
                         }
                     }
 
-                    long lengthTicks = getConfigInt("durationPerLevelTicks", 40, item, INFINITE) * getLevel(item, INFINITE);
+                    long lengthTicks = getConfigInt("durationPerLevelTicks", 40, item, INFINITY) * getLevel(item, INFINITY);
 
                     Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new ShowPlayerTask(player, other), lengthTicks);
                     // TODO: cooldown period
@@ -2301,17 +2374,17 @@ public class EnchantMoreListener implements Listener {
         // TODO: fire protection = remove water (like flint & steel aqua affinity)
 
         // Bow + Bane of Arthropods = poison
-        if (hasEnch(bow, BANE, player)) {
+        if (hasEnch(bow, BANE_OF_ARTHROPODS, player)) {
             // TODO: only poison hit entity!
 
             // poison nearby living things
-            int r = getLevel(bow, BANE);
-            double poisonRange = r * getConfigDouble("poisonRangePerLevel", 1.0, bow, BANE);
+            int r = getLevel(bow, BANE_OF_ARTHROPODS);
+            double poisonRange = r * getConfigDouble("poisonRangePerLevel", 1.0, bow, BANE_OF_ARTHROPODS);
             List<Entity> victims = arrow.getNearbyEntities(poisonRange, poisonRange, poisonRange);
             for (Entity victim: victims) {
                 if (victim instanceof LivingEntity) {
                     ((LivingEntity)victim).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 
-                        r * getConfigInt("poisonDurationTicksPerLevel", 100, bow, BANE),
+                        r * getConfigInt("poisonDurationTicksPerLevel", 100, bow, BANE_OF_ARTHROPODS),
                         1));
                 }
             }
@@ -2622,7 +2695,7 @@ public class EnchantMoreListener implements Listener {
     	ItemStack chestplate = player.getInventory().getChestplate();
     	if ((chestplate != null) && (chestplate.getType() != Material.AIR)) {
     		//Chestplate + Infinity = godmode
-    		if (hasEnch(chestplate, INFINITE, player)) {
+    		if (hasEnch(chestplate, INFINITY, player)) {
     			damage(chestplate, event.getDamage() / 2, player);
 				player.getInventory().setChestplate((chestplate.getDurability() > chestplate.getType().getMaxDurability() ? null : chestplate));
 				event.setCancelled(true);
@@ -3041,7 +3114,7 @@ public class EnchantMoreListener implements Listener {
 
         ItemStack chestplate = player.getInventory().getChestplate();
         // Chestplate + Infinity = no hunger (secondary)
-        if (chestplate != null && chestplate.getType() != Material.AIR && hasEnch(chestplate, INFINITE, player)) {
+        if (chestplate != null && chestplate.getType() != Material.AIR && hasEnch(chestplate, INFINITY, player)) {
             event.setFoodLevel(20); // max
             // not cancelled, so still can eat
         }
