@@ -1,6 +1,6 @@
 name: EnchantMore
 main: me.dsh105.enchantmore.EnchantMore
-version: 2.0
+version: 2.1
 description: Extending Beyond Enchanted Items...
 softdepend: 
     - WorldGuard
