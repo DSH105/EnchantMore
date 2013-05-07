@@ -908,7 +908,13 @@ public class EnchantMoreListener implements Listener {
     	if (item.getType() == Material.BOW && (action == Action.RIGHT_CLICK_AIR || action == Action.RIGHT_CLICK_BLOCK)) {
     		//Bow + Efficiency = Instant Shoot
     		if (hasEnch(item, EFFICIENCY, player)) {
-    			Arrow arrow = (Arrow) player.launchProjectile(Arrow.class);
+    			if (player.getInventory().contains(Material.ARROW)) {
+    				Arrow arrow = (Arrow) player.launchProjectile(Arrow.class);
+    				int slot = player.getInventory().first(Material.ARROW);
+    				ItemStack i = player.getInventory().getItem(slot);
+    				i.setAmount(i.getAmount() - 1);
+    				player.getInventory().setItem(slot, i);
+    			}
     		}
     	}
     	else if (item.getType() == Material.FLINT_AND_STEEL && (action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK)) {
