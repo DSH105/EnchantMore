@@ -2341,16 +2341,18 @@ public class EnchantMoreListener implements Listener {
                 
                 // TODO: only poison hit entity!
 
-                double stunRange = r * getConfigDouble("stunRangePerLevel", 1.0, bow, AQUA_AFFINITY);
-
-                // stun nearby living things
-                List<Entity> victims = arrow.getNearbyEntities(stunRange, stunRange, stunRange);
-                for (Entity victim: victims) {
-                    if (victim instanceof LivingEntity) {
-                        ((LivingEntity)victim).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 
-                            r * getConfigInt("stunDurationTicksPerLevel", 20*5, bow, AQUA_AFFINITY),
-                            1));
-                    }
+                if (plugin.canPVP(player, arrow.getLocation(), bow.getTypeId(), AQUA_AFFINITY)) {
+                	double stunRange = r * getConfigDouble("stunRangePerLevel", 1.0, bow, AQUA_AFFINITY);
+                	
+                	// stun nearby living things
+                	List<Entity> victims = arrow.getNearbyEntities(stunRange, stunRange, stunRange);
+                	for (Entity victim: victims) {
+                		if (victim instanceof LivingEntity) {
+                			((LivingEntity)victim).addPotionEffect(new PotionEffect(PotionEffectType.SLOW, 
+                					r * getConfigInt("stunDurationTicksPerLevel", 20*5, bow, AQUA_AFFINITY),
+                					1));
+                		}
+                	}
                 }
 
                 // no extra damage
@@ -2412,19 +2414,21 @@ public class EnchantMoreListener implements Listener {
 
         // Bow + Bane of Arthropods = poison
         if (hasEnch(bow, BANE_OF_ARTHROPODS, player)) {
-            // TODO: only poison hit entity!
-
-            // poison nearby living things
-            int r = getLevel(bow, BANE_OF_ARTHROPODS);
-            double poisonRange = r * getConfigDouble("poisonRangePerLevel", 1.0, bow, BANE_OF_ARTHROPODS);
-            List<Entity> victims = arrow.getNearbyEntities(poisonRange, poisonRange, poisonRange);
-            for (Entity victim: victims) {
-                if (victim instanceof LivingEntity) {
-                    ((LivingEntity)victim).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 
-                        r * getConfigInt("poisonDurationTicksPerLevel", 100, bow, BANE_OF_ARTHROPODS),
-                        1));
-                }
-            }
+        	if (plugin.canPVP(player, arrow.getLocation(), bow.getTypeId(), BANE_OF_ARTHROPODS)) {
+        		// TODO: only poison hit entity!
+        		
+        		// poison nearby living things
+        		int r = getLevel(bow, BANE_OF_ARTHROPODS);
+        		double poisonRange = r * getConfigDouble("poisonRangePerLevel", 1.0, bow, BANE_OF_ARTHROPODS);
+        		List<Entity> victims = arrow.getNearbyEntities(poisonRange, poisonRange, poisonRange);
+        		for (Entity victim: victims) {
+        			if (victim instanceof LivingEntity) {
+        				((LivingEntity)victim).addPotionEffect(new PotionEffect(PotionEffectType.POISON, 
+        						r * getConfigInt("poisonDurationTicksPerLevel", 100, bow, BANE_OF_ARTHROPODS),
+        						1));
+        			}
+        		}
+        	}
 
         }
 

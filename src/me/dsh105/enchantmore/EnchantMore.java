@@ -119,6 +119,39 @@ public class EnchantMore extends JavaPlugin {
 > what would you recommend in the meantime?
 <zml2008>  Using WG's API
 */
+	public boolean canPVP(Player player, Block block, int itemId, Enchantment ench) { //Check if WorldGuard allows lightning
+		if (wg != null) {
+			World world = block.getWorld();
+			Location loc = block.getLocation();
+			RegionManager regionManager = wg.getRegionManager(world);
+			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
+			if (!set.allows(DefaultFlag.PVP)) {
+				int packed = EnchantMoreListener.packEnchItem(itemId, ench);
+				if (verboseLogger()) {
+					this.getLogger().info("Effect " + Material.getMaterial(itemId) + "(" + itemId + ") + " + ench + " = " + packed + " blocked by WorldGuard.");
+				}
+				player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + Material.getMaterial(itemId) + " (" + itemId + ") + " + ench + " = " + packed + " blocked by WorldGuard.");
+			}
+			return set.allows(DefaultFlag.PVP);
+		}
+		return true;
+	}
+	public boolean canPVP(Player player, Location loc, int itemId, Enchantment ench) { //Check if WorldGuard allows lightning
+		if (wg != null) {
+			World world = loc.getWorld();
+			RegionManager regionManager = wg.getRegionManager(world);
+			ApplicableRegionSet set = regionManager.getApplicableRegions(loc);
+			if (!set.allows(DefaultFlag.PVP)) {
+				int packed = EnchantMoreListener.packEnchItem(itemId, ench);
+				if (verboseLogger()) {
+					this.getLogger().info("Effect " + Material.getMaterial(itemId) + "(" + itemId + ") + " + ench + " = " + packed + " blocked by WorldGuard.");
+				}
+				player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + Material.getMaterial(itemId) + " (" + itemId + ") + " + ench + " = " + packed + " blocked by WorldGuard.");
+			}
+			return set.allows(DefaultFlag.PVP);
+		}
+		return true;
+	}
 	public boolean canStrikeLightning(Player player, Block block, int itemId, Enchantment ench) { //Check if WorldGuard allows lightning
 		if (wg != null) {
 			World world = block.getWorld();
