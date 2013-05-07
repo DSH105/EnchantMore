@@ -556,20 +556,22 @@ public class EnchantMoreListener implements Listener {
     	//TODO: Configurable ticks per level
     	return 20 * 10 * level;
     }
-    private void fellTree(Block start, ItemStack tool, int level, int id1, int id2, int id3) {
+    private void fellTree(Player player, Block start, ItemStack tool, int level, int id1, int id2, int id3) {
     	start.breakNaturally();
     	for (int dx = -level; dx <= level; dx += 1) {
     		for (int dy = -level; dy <= level; dy += 1) {
     			for (int dz = -level; dz <= level; dz += 1) {
     				Block branch = start.getRelative(dx, dy, dz);
     				if ((branch != null) && (branch.getTypeId() == id1 || branch.getTypeId() == id2 || branch.getTypeId() == id3)) {
-    					branch.breakNaturally();
+    					if (branch.breakNaturally()) {
+    						plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(branch, player));
+    					}
     				}
     			}
     		}
     	}
     }
-    private void hedgeTrimmer(Block start, ItemStack till, int level, int itemId, Enchantment ench) {
+    private void hedgeTrimmer(Player player, Block start, ItemStack till, int level, int itemId, Enchantment ench) {
     	//TODO: do a sphere! or other shapes! topiary
     	int packed = packEnchItem(itemId, ench);
     	String shape = "square";
@@ -583,6 +585,7 @@ public class EnchantMoreListener implements Listener {
         				Block leaf = start.getRelative(dx, dy, dz);
         				if (leaf != null && leaf.getType() == Material.LEAVES) {
         					leaf.breakNaturally();
+        					plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(leaf, player));
         				}
         			}
         		}
@@ -593,6 +596,7 @@ public class EnchantMoreListener implements Listener {
     		for (Location loc : blocks) {
     			Block block = loc.getBlock();
     			block.breakNaturally();
+    			plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
     		}
     	}
     }
@@ -1318,6 +1322,7 @@ public class EnchantMoreListener implements Listener {
             			else {
             				if (!(block.getType() == Material.BEDROCK)) {
             					block.getRelative(dx*i, dy*i, dz*i).breakNaturally(item);
+            					plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
             				}
             			}
         			}
@@ -1711,8 +1716,10 @@ public class EnchantMoreListener implements Listener {
                         } 
                     }
                     if (!naturalDrop) {
-                        plugin.safeSetBlock(player, block, Material.AIR);
-                        event.setCancelled(true);
+                    	event.setCancelled(true);
+                        if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                        	plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                        }
                     }
 
                     // no extra damage
@@ -1728,7 +1735,7 @@ public class EnchantMoreListener implements Listener {
                         int id3 = getConfigInt("treeBlockId3", 243, item, POWER);   // IC2 Rubber Wood
 
                         if (block.getTypeId() == id1 || block.getTypeId() == id2 || block.getTypeId() == id3) {
-                            fellTree(block, item, getLevel(item, POWER) * getConfigInt("extraTrunkWidthPerLevel", 1, item, POWER), id1, id2, id3);
+                            fellTree(player, block, item, getLevel(item, POWER) * getConfigInt("extraTrunkWidthPerLevel", 1, item, POWER), id1, id2, id3);
                             event.setCancelled(true);
                             // no extra damage
                         }
@@ -1780,7 +1787,9 @@ public class EnchantMoreListener implements Listener {
                         if (getLevel(item, SILK_TOUCH) >= minLevel) {
                             if (block.getType() == Material.SNOW) {
                                 world.dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), 1));
-                                plugin.safeSetBlock(player, block, Material.AIR);
+                                if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                                	plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                                }
                                 event.setCancelled(true);   // do not drop snowballs
                             }
                         }
@@ -1796,7 +1805,9 @@ public class EnchantMoreListener implements Listener {
                             if (block.getType() == Material.ICE) {
                                 if (getConfigBoolean("harvestIce", true, item, SILK_TOUCH)) {
                                     world.dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), 1));
-                                    plugin.safeSetBlock(player, block, Material.AIR);
+                                    if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                                    	plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                                    }
                                     event.setCancelled(true); 
                                     // no extra damage
                                 }
@@ -1810,7 +1821,9 @@ public class EnchantMoreListener implements Listener {
                                     drop.addUnsafeEnchantment(SILK_TOUCH, block.getData());
 
                                     world.dropItemNaturally(block.getLocation(), drop);
-                                    plugin.safeSetBlock(player, block, Material.AIR);
+                                    if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                                    	plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                                    }
                                     event.setCancelled(true);
                                 }
                             } else if (block.getTypeId() == 97) {   // Bukkit Material calls this MONSTER_EGGS, but I'm not going to call it that!
@@ -1820,7 +1833,9 @@ public class EnchantMoreListener implements Listener {
                                     drop.addUnsafeEnchantment(SILK_TOUCH, block.getData());
 
                                     world.dropItemNaturally(block.getLocation(), drop);
-                                    plugin.safeSetBlock(player, block, Material.AIR);
+                                    if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                                    	plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                                    }
                                     event.setCancelled(true);
                                 }
                             }
@@ -1863,7 +1878,9 @@ public class EnchantMoreListener implements Listener {
                 		}
                 		
                 		if (!naturalDrop) {
-                			plugin.safeSetBlock(player, block, Material.AIR);
+                			if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                				plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                			}
                 			event.setCancelled(true);
                 		}
                 	}
@@ -1916,6 +1933,7 @@ public class EnchantMoreListener implements Listener {
                                                         // so this effect can be useful to gather diamonds over dangerous lava
                                                     	if (plugin.canDropItem(player, block, item.getTypeId(), SHARPNESS)) {
                                                     		world.dropItemNaturally(block.getLocation(), drop);
+                                                    		plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
                                                     	}
                                                     }
                                                 }
@@ -1940,7 +1958,9 @@ public class EnchantMoreListener implements Listener {
             			
             			world.dropItemNaturally(block.getLocation(), new ItemStack(block.getType(), 1));
             			
-            			plugin.safeSetBlock(player, block, Material.AIR);
+            			if (plugin.safeSetBlock(player, block, Material.AIR)) {
+            				plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+            			}
             			event.setCancelled(true);
             		} 
             		// no extra damage
@@ -1961,7 +1981,9 @@ public class EnchantMoreListener implements Listener {
 
                         world.dropItemNaturally(block.getLocation(), new ItemStack(dropType, 1));
                         
-                        plugin.safeSetBlock(player, block, Material.AIR);
+                        if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                        	plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                        }
                         event.setCancelled(true);
                 	}
                 }
@@ -1973,7 +1995,7 @@ public class EnchantMoreListener implements Listener {
             if (hasEnch(item, POWER, player) && block.getType() == Material.LEAVES) {
             	if (plugin.canBuild(player, block, item.getTypeId(), POWER)) {
             		event.setCancelled(true);
-            		hedgeTrimmer(block, item, getLevel(item, POWER), item.getTypeId(), POWER);
+            		hedgeTrimmer(player, block, item, getLevel(item, POWER), item.getTypeId(), POWER);
             		// no extra damage
             	}
             }
@@ -1993,7 +2015,9 @@ public class EnchantMoreListener implements Listener {
 
                         world.dropItemNaturally(block.getLocation(), drop);
                         
-                        plugin.safeSetBlock(player, block, Material.AIR);
+                        if (plugin.safeSetBlock(player, block, Material.AIR)) {
+                        	plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
+                        }
                         event.setCancelled(true);
                     }
                     // no extra damage
@@ -2333,10 +2357,12 @@ public class EnchantMoreListener implements Listener {
         		 class ArrowPierceTask implements Runnable {
                      Arrow arrow;
                      int depth;
+                     Player player;
 
-                     public ArrowPierceTask(Arrow arrow, int depth) {
+                     public ArrowPierceTask(Player player, Arrow arrow, int depth) {
                          this.arrow = arrow;
                          this.depth = depth;
+                         this.player = player;
                      }
 
                      public void run() {
@@ -2349,6 +2375,7 @@ public class EnchantMoreListener implements Listener {
 
                          // Pierce block, destroying it
                          block.setType(Material.AIR);
+                         plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
                          // TODO: should it drop items?
                          
                          // Trace through multiple blocks in same direction, up to enchantment level
@@ -2359,6 +2386,7 @@ public class EnchantMoreListener implements Listener {
                                  Block b = it.next();
                                  if (b.getType() != Material.BEDROCK) {
                                      b.setType(Material.AIR);
+                                     plugin.getServer().getPluginManager().callEvent(new BlockBreakEvent(block, player));
                                      // TODO: figure out how to refresh lighting here
                                      //b.setData(b.getDabta(), true);
                                  }
@@ -2371,7 +2399,7 @@ public class EnchantMoreListener implements Listener {
                      }
                  }
 
-                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new ArrowPierceTask(arrow, getLevel(bow, KNOCKBACK)));
+                 Bukkit.getScheduler().scheduleSyncDelayedTask(plugin, new ArrowPierceTask(player, arrow, getLevel(bow, KNOCKBACK)));
         	}
         }
         // TODO: fire protection = remove water (like flint & steel aqua affinity)
