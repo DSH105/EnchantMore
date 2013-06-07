@@ -156,27 +156,37 @@ public class EnchantMoreListener implements Listener {
 		this.plugin = plugin;
 		loadConfig();
 	}
-	public static boolean hasEnch(ItemStack item, Enchantment ench, final Player player) { //Check if the item has an enchantment
+	
+	public static boolean hasEnch(ItemStack item, Enchantment ench, final Player player) {
 		if (item == null) {
+			return false;
+		}
+		if (!getEffectEnabled(item.getTypeId(), ench) && plugin.getConfig().getBoolean("debugDisabledEffects")) { //Check if the effect is disabled in configuration
+			if (item.containsEnchantment(ench)) {
+				return checkPerm(item, ench, player);
+			}
+		}
+		else {
+			if (!disableMsgCooldown.contains(player.getName())) {
+				player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + item.getType() + " (" + item.getTypeId() + ") + " + ench + " = " + packEnchItem(item.getTypeId(), ench) + " is disabled.");
+				disableMsgCooldown.add(player.getName());
+				
+				BukkitTask task = new BukkitRunnable() {
+					public void run() {
+						disableMsgCooldown.remove(player.getName());
+					}
+				}.runTaskLater(plugin, plugin.getConfig().getInt("disableMsgCooldownTicks", 6000));
+			}
+			return false;
+		}
+		return false;
+	}
+	
+	public static boolean checkPerm(ItemStack item, Enchantment ench, final Player player) {
+		if ((player.hasPermission(getPermission(item, ench)) && plugin.getConfig().getBoolean("usePermissions")) || !plugin.getConfig().getBoolean("usePermissions")) {
 			return true;
 		}
-		if (item.containsEnchantment(ench)) {
-			if ((player.hasPermission(getPermission(item, ench)) && plugin.getConfig().getBoolean("usePermissions")) || !plugin.getConfig().getBoolean("usePermissions")) {
-				if (!getEffectEnabled(item.getTypeId(), ench) && plugin.getConfig().getBoolean("debugDisabledEffects")) { //Check if the effect is disabled in configuration
-					if (!disableMsgCooldown.contains(player.getName())) {
-						player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + item.getType() + " (" + item.getTypeId() + ") + " + ench + " = " + packEnchItem(item.getTypeId(), ench) + " is disabled.");
-						disableMsgCooldown.add(player.getName());
-						
-						BukkitTask task = new BukkitRunnable() {
-							public void run() {
-								disableMsgCooldown.remove(player.getName());
-							}
-						}.runTaskLater(plugin, plugin.getConfig().getInt("disableMsgCooldownTicks", 6000));
-					}
-					return false;
-				}
-				return item.containsEnchantment(ench);
-			}
+		else {
 			if (plugin.getConfig().getBoolean("sendPermissionMessage")) {
 				if (plugin.getConfig().getBoolean("useCooldown")) {
 					if (!disablePermMsgCooldown.contains(player.getName())) {
@@ -197,6 +207,8 @@ public class EnchantMoreListener implements Listener {
 		}
 		return false;
 	}
+	
+	
 	public static String getPermission(ItemStack item, Enchantment ench) {
 		if (nameByEnch.get(ench).replace("_", "").toLowerCase() == null || item == null) {
 			return "enchantmore.enchantmore";
