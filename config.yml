@@ -26,34 +26,34 @@ moveListener: true
 
 effects:
     Axe + Aqua Affinity:    # Slowness to the user
-        enabled: true
+        enable: true
         durationTicksPerLevel: 100    # Duration in ticks (20 ticks per second) for the Slowness Potion to last.
         amplifier: 1    # Slowness Potion Amplifier (1 is slowness I, 2 is slowness II, etc)
     Axe + Flame:    # Auto-Smelt
-        enabled: true
+        enable: true
     Axe + Power:    # Fell Tree by breaking 1 log
-        enabled: true
+        enable: true
         extraTrunkWidthPerLevel: 1    # How far to chop around the tree
     Axe + Respiration:    # Generate Tree
-        enabled: true
+        enable: true
     Boots + Feather Falling:    # Zero Fall Damage
-        enabled: true
+        enable: true
         minLevel: 10    # Minimum enchantment level upon which the effect is enabled.
     Boots + Flame:    #Firewalker (Set ground on fire as you walk)
-        enabled: true
+        enable: true
     Boots + Power:    # Witch's Broom (Sprint Flying)
-        enabled: true
+        enable: true
         yVelocityPerLevel: 1.0
     Boots + Punch:    # Hover Jump (Double Tap Shift)
-        enabled: true
+        enable: true
         yVelocityPerEnchLevel: 1.0
     Bow + Aqua Affinity:    # Freeze water and stun players
-        enabled: true
+        enable: true
         freezeRangePerLevel: 1    # Range of blocks that are frozen from the target per enchantment level.
         stunRangePerLevel: 1    # Range of blocks that players can be stunned per enchantment level.
         stunDurationTicksPerLevel: 100    # Duration in ticks (20 ticks per second) players are stunned per enchantment level.
     Bow + Bane Of Arthropods:    # Poison players who are shot.
-        enabled: true
+        enable: true
         poisonRangePerLevel: 1.0    # Range of blocks that players can be poisoned per enchantment level. Players within the range of the arrow landing will be poisoned.
         poisonDurationTicksPerLevel: 100    # Duration in ticks (20 ticks per second) that the poison effect lasts for.
     Bow + Efficiency:    # Instant Shoot (Rapid fire)
