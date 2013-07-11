@@ -11,10 +11,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.server.v1_5_R3.CraftingManager;
-import net.minecraft.server.v1_5_R3.EntityFireball;
-import net.minecraft.server.v1_5_R3.EntityLiving;
-import net.minecraft.server.v1_5_R3.Packet63WorldParticles;
+import net.minecraft.server.v1_6_R2.Packet63WorldParticles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -28,11 +25,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_5_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftArrow;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftFireball;
-import org.bukkit.craftbukkit.v1_5_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_5_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
@@ -83,7 +79,6 @@ import org.bukkit.inventory.Recipe;
 import org.bukkit.inventory.ShapedRecipe;
 import org.bukkit.inventory.ShapelessRecipe;
 import org.bukkit.inventory.meta.FireworkMeta;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -91,11 +86,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
-
-import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
-import com.sk89q.worldguard.protection.ApplicableRegionSet;
-import com.sk89q.worldguard.protection.flags.DefaultFlag;
-import com.sk89q.worldguard.protection.managers.RegionManager;
 
 public class EnchantMoreListener implements Listener {
 
@@ -526,7 +516,7 @@ public class EnchantMoreListener implements Listener {
 	public static void updateInventory(Player player) {
     	player.updateInventory();
     }
-	public static void damage(ItemStack tool, int amount, Player player) {
+	public static void damage(ItemStack tool, double amount, Player player) {
 		if (tool.getDurability() > tool.getType().getMaxDurability()) {
 			player.getInventory().remove(tool);
 		}
@@ -541,8 +531,8 @@ public class EnchantMoreListener implements Listener {
     			z = loc.getBlockZ();
     	World world = loc.getWorld();
     	ItemStack boneMeal = (new ItemStack(Material.INK_SACK, 1, (short)15));
-    	net.minecraft.server.v1_5_R3.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
-    	net.minecraft.server.v1_5_R3.Item.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer)player).getHandle(), ((CraftWorld)world).getHandle(), x, y, z, 0, x, y, z);
+    	net.minecraft.server.v1_6_R2.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
+    	net.minecraft.server.v1_6_R2.Item.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer)player).getHandle(), ((CraftWorld)world).getHandle(), x, y, z, 0, x, y, z);
     }
     private String serialiseLocation(Location loc) { //Automagically transform a location into a String. Magic ain't it?
     	if (loc == null) {
@@ -2716,13 +2706,13 @@ public class EnchantMoreListener implements Listener {
     public Block getArrowHit(Arrow arrow) {
         World world = arrow.getWorld();
 
-        net.minecraft.server.v1_5_R3.EntityArrow entityArrow = ((CraftArrow)arrow).getHandle();
+        net.minecraft.server.v1_6_R2.EntityArrow entityArrow = ((CraftArrow)arrow).getHandle();
 
         try {
             // saved to NBT tag as xTile,yTile,zTile
-            Field fieldX = net.minecraft.server.v1_5_R3.EntityArrow.class.getDeclaredField("e");
-            Field fieldY = net.minecraft.server.v1_5_R3.EntityArrow.class.getDeclaredField("f");
-            Field fieldZ = net.minecraft.server.v1_5_R3.EntityArrow.class.getDeclaredField("g");
+            Field fieldX = net.minecraft.server.v1_6_R2.EntityArrow.class.getDeclaredField("d");
+            Field fieldY = net.minecraft.server.v1_6_R2.EntityArrow.class.getDeclaredField("e");
+            Field fieldZ = net.minecraft.server.v1_6_R2.EntityArrow.class.getDeclaredField("f");
 
             fieldX.setAccessible(true);
             fieldY.setAccessible(true);
@@ -2827,7 +2817,7 @@ public class EnchantMoreListener implements Listener {
                 // Chestplate + Sharpness = reflect damage 
                 if (hasEnch(chestplate, SHARPNESS, player)) {
                     if (damager instanceof LivingEntity) {
-                        int amount = getLevel(chestplate, SHARPNESS) * event.getDamage();
+                        double amount = getLevel(chestplate, SHARPNESS) * event.getDamage();
                         ((LivingEntity)damager).damage(amount);
                         event.setCancelled(true);
 
