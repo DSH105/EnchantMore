@@ -151,12 +151,12 @@ public class EnchantMoreListener implements Listener {
 		if (item == null) {
 			return false;
 		}
-		if (!getEffectEnabled(item.getTypeId(), ench) && plugin.getConfig().getBoolean("debugDisabledEffects")) { //Check if the effect is disabled in configuration
+		if (getEffectEnabled(item.getTypeId(), ench)) { //Check if the effect is disabled in configuration
 			if (item.containsEnchantment(ench)) {
 				return checkPerm(item, ench, player);
 			}
 		}
-		else {
+		else if (plugin.getConfig().getBoolean("debugDisabledEffects")) {
 			if (!disableMsgCooldown.contains(player.getName())) {
 				player.sendMessage(ChatColor.GOLD + "[EnchantMore] " + ChatColor.RED + "Effect " + item.getType() + " (" + item.getTypeId() + ") + " + ench + " = " + packEnchItem(item.getTypeId(), ench) + " is disabled.");
 				disableMsgCooldown.add(player.getName());
