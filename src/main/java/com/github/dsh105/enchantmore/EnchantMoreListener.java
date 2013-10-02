@@ -11,7 +11,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.server.v1_6_R2.Packet63WorldParticles;
+import net.minecraft.server.v1_6_R3.Packet63WorldParticles;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -25,10 +25,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_6_R2.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftArrow;
-import org.bukkit.craftbukkit.v1_6_R2.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Animals;
 import org.bukkit.entity.Arrow;
@@ -531,8 +531,8 @@ public class EnchantMoreListener implements Listener {
     			z = loc.getBlockZ();
     	World world = loc.getWorld();
     	ItemStack boneMeal = (new ItemStack(Material.INK_SACK, 1, (short)15));
-    	net.minecraft.server.v1_6_R2.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
-    	net.minecraft.server.v1_6_R2.Item.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer)player).getHandle(), ((CraftWorld)world).getHandle(), x, y, z, 0, x, y, z);
+    	net.minecraft.server.v1_6_R3.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
+    	net.minecraft.server.v1_6_R3.Item.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer)player).getHandle(), ((CraftWorld)world).getHandle(), x, y, z, 0, x, y, z);
     }
     private String serialiseLocation(Location loc) { //Automagically transform a location into a String. Magic ain't it?
     	if (loc == null) {
@@ -2706,13 +2706,13 @@ public class EnchantMoreListener implements Listener {
     public Block getArrowHit(Arrow arrow) {
         World world = arrow.getWorld();
 
-        net.minecraft.server.v1_6_R2.EntityArrow entityArrow = ((CraftArrow)arrow).getHandle();
+        net.minecraft.server.v1_6_R3.EntityArrow entityArrow = ((CraftArrow)arrow).getHandle();
 
         try {
             // saved to NBT tag as xTile,yTile,zTile
-            Field fieldX = net.minecraft.server.v1_6_R2.EntityArrow.class.getDeclaredField("d");
-            Field fieldY = net.minecraft.server.v1_6_R2.EntityArrow.class.getDeclaredField("e");
-            Field fieldZ = net.minecraft.server.v1_6_R2.EntityArrow.class.getDeclaredField("f");
+            Field fieldX = net.minecraft.server.v1_6_R3.EntityArrow.class.getDeclaredField("d");
+            Field fieldY = net.minecraft.server.v1_6_R3.EntityArrow.class.getDeclaredField("e");
+            Field fieldZ = net.minecraft.server.v1_6_R3.EntityArrow.class.getDeclaredField("f");
 
             fieldX.setAccessible(true);
             fieldY.setAccessible(true);
