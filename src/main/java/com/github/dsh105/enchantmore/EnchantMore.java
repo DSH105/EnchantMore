@@ -1,4 +1,4 @@
-package me.dsh105.enchantmore;
+package com.github.dsh105.enchantmore;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedReader;
@@ -33,6 +33,7 @@ import com.sk89q.worldguard.protection.managers.RegionManager;
 public class EnchantMore extends JavaPlugin {
 	
 	WorldGuardPlugin wg = null;
+	private static EnchantMore instance;
 	
 	private WorldGuardPlugin getWorldGuard() {
 		Plugin wgPlugin = this.getServer().getPluginManager().getPlugin("WorldGuard");
@@ -41,8 +42,13 @@ public class EnchantMore extends JavaPlugin {
 		}
 		return (WorldGuardPlugin) wgPlugin;
 	}
+
+	public static EnchantMore getInstance() {
+		return instance;
+	}
 	
 	public void onEnable() {
+		instance = this;
 		PluginManager manager = this.getServer().getPluginManager();
 		String fileName = getDataFolder() + System.getProperty("file.separator") + "config.yml";
 		File file = new File(fileName);

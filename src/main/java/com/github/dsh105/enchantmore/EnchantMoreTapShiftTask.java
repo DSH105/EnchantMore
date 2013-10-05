@@ -1,4 +1,4 @@
-package me.dsh105.enchantmore;
+package com.github.dsh105.enchantmore;
 
 import java.util.concurrent.ConcurrentHashMap;
 
