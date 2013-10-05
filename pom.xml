@@ -15,7 +15,7 @@
   <version>${project.version}</version>
   <build>
         <defaultGoal>clean package install</defaultGoal>
-        <finalName>EchoPet</finalName>
+        <finalName>EnchantMore</finalName>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <resources>
             <resource>
