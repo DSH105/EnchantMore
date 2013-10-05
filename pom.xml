@@ -4,7 +4,7 @@
   <artifactId>EnchantMore</artifactId>
   <name>EnchantMore</name>
   <properties>
-      <project.version>2.4</project.version>
+      <project.version>2.5-SNAPSHOT</project.version>
       <worldguard.version>5.8.1-SNAPSHOT</worldguard.version>
       <worldedit.version>5.5.8-SNAPSHOT</worldedit.version>
       <minecraft.version>1.6.4</minecraft.version>
