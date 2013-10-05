@@ -171,7 +171,7 @@ public class EnchantMoreListener implements Listener {
 		}
 		return false;
 	}
-	
+	   //hello people
 	public static boolean checkPerm(ItemStack item, Enchantment ench, final Player player) {
 		if ((player.hasPermission(getPermission(item, ench)) && plugin.getConfig().getBoolean("usePermissions")) || !plugin.getConfig().getBoolean("usePermissions")) {
 			return true;
