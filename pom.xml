@@ -6,7 +6,7 @@
   <properties>
       <project.version>2.4</project.version>
       <worldguard.version>5.8.1-SNAPSHOT</worldguard.version>
-      <worldedit.version>5.5.9-SNAPSHOT</worldedit.version>
+      <worldedit.version>5.5.8-SNAPSHOT</worldedit.version>
       <minecraft.version>1.6.4</minecraft.version>
       <craftbukkit.version>R0.1</craftbukkit.version>
       <cb_package>v1_6_R3</cb_package>
@@ -100,10 +100,6 @@
         <repository>
             <id>sk89q-repo</id>
             <url>http://maven.sk89q.com/repo/</url>
-        </repository>
-        <repository>
-            <id>kitteh-repo</id>
-            <url>http://repo.kitteh.org/content/groups/public</url>
         </repository>
     </repositories>
 </project>
