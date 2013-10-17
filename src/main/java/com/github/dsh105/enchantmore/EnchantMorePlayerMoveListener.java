@@ -15,7 +15,7 @@ import org.bukkit.util.Vector;
 
 public class EnchantMorePlayerMoveListener implements Listener {
 
-	EnchantMore plugin;
+    EnchantMore plugin;
 
     public EnchantMorePlayerMoveListener(EnchantMore plugin) {
         this.plugin = plugin;
@@ -23,14 +23,14 @@ public class EnchantMorePlayerMoveListener implements Listener {
         Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
     }
 
-    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled=true)
+    @EventHandler(priority = EventPriority.NORMAL, ignoreCancelled = true)
     public void onPlayerMove(PlayerMoveEvent event) {
         // TODO: WorldGuard
 
         Player player = event.getPlayer();
         ItemStack item = player.getItemInHand();
 
-        if (item == null) { 
+        if (item == null) {
             return;
         }
 
@@ -48,9 +48,9 @@ public class EnchantMorePlayerMoveListener implements Listener {
             // Boots + Power = witch's broom (sprint flying)
             if (EnchantMoreListener.hasEnch(boots, EnchantMoreListener.POWER, player)) {
                 if (player.isSprinting()) {
-                    double factor = 
-                        EnchantMoreListener.getConfigDouble("velocityMultiplerPerLevel", 1.0, boots, EnchantMoreListener.POWER) 
-                        * EnchantMoreListener.getLevel(boots, EnchantMoreListener.POWER);
+                    double factor =
+                            EnchantMoreListener.getConfigDouble("velocityMultiplerPerLevel", 1.0, boots, EnchantMoreListener.POWER)
+                                    * EnchantMoreListener.getLevel(boots, EnchantMoreListener.POWER);
 
                     Vector velocity = event.getTo().getDirection().normalize().multiply(factor);
 
