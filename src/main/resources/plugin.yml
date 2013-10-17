@@ -1,5 +1,5 @@
 name: EnchantMore
-main: com.github.dsh105.enchantmore.EnchantMore
+main: ${main.class}
 version: ${project.version}
 description: Enchanted hoes, enchanted fishing rods, enchanted shears and more!
 softdepend: 

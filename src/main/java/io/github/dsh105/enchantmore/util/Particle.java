@@ -1,4 +1,4 @@
-package com.github.dsh105.enchantmore.util;
+package io.github.dsh105.enchantmore.util;
 
 import net.minecraft.server.v1_6_R3.Packet;
 import net.minecraft.server.v1_6_R3.Packet63WorldParticles;

@@ -1,4 +1,4 @@
-package com.github.dsh105.enchantmore;
+package io.github.dsh105.enchantmore;
 
 import net.minecraft.server.v1_6_R3.Packet63WorldParticles;
 import org.bukkit.*;

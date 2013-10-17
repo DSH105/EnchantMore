@@ -1,4 +1,4 @@
-package com.github.dsh105.enchantmore;
+package io.github.dsh105.enchantmore;
 
 import org.bukkit.Material;
 import org.bukkit.World;

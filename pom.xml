@@ -1,6 +1,6 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
-  <groupId>com.github.dsh105</groupId>
+  <groupId>io.github.dsh105</groupId>
   <artifactId>EnchantMore</artifactId>
   <name>EnchantMore</name>
   <properties>
@@ -10,7 +10,7 @@
       <minecraft.version>1.6.4</minecraft.version>
       <craftbukkit.version>R0.1</craftbukkit.version>
       <cb_package>v1_6_R3</cb_package>
-      <main.class>com.github.dsh105.enchantmore.EnchantMore</main.class>
+      <main.class>io.github.dsh105.enchantmore.EnchantMore</main.class>
   </properties>
   <version>${project.version}</version>
   <build>

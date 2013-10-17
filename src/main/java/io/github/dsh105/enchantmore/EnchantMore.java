@@ -1,4 +1,4 @@
-package com.github.dsh105.enchantmore;
+package io.github.dsh105.enchantmore;
 
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import com.sk89q.worldguard.protection.ApplicableRegionSet;

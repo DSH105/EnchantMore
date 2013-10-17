@@ -1,6 +1,6 @@
-package com.github.dsh105.enchantmore.util;
+package io.github.dsh105.enchantmore.util;
 
-import com.github.dsh105.enchantmore.EnchantMore;
+import io.github.dsh105.enchantmore.EnchantMore;
 import org.bukkit.FireworkEffect;
 import org.bukkit.Location;
 import org.bukkit.World;
