@@ -200,37 +200,37 @@ public class EnchantMoreListener implements Listener {
 	
 	
 	public static String getPermission(ItemStack item, Enchantment ench) {
-		if (nameByEnch.get(ench).replace("_", "").toLowerCase() == null || item == null) {
+		if (nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase() == null || item == null) {
 			return "enchantmore.enchantmore";
 		}
 		if (isHoe(item.getType())) {
-			return "enchantmore.hoe." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.hoe." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isSword(item.getType())) {
-			return "enchantmore.sword." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.sword." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isPickaxe(item.getType())) {
-			return "enchantmore.pickaxe." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.pickaxe." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isShovel(item.getType())) {
-			return "enchantmore.shovel." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.shovel." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isAxe(item.getType())) {
-			return "enchantmore.axe." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.axe." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isHelmet(item.getType())) {
-			return "enchantmore.helmet." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.helmet." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isChestplate(item.getType())) {
-			return "enchantmore.chestplate." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.chestplate." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isLeggings(item.getType())) {
-			return "enchantmore.leggings." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.leggings." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
 		if (isBoots(item.getType())) {
-			return "enchantmore.boots." + nameByEnch.get(ench).replace("_", "").toLowerCase();
+			return "enchantmore.boots." + nameByEnch.get(ench).replace("_", "").replace(" ", "").toLowerCase();
 		}
-		return "enchantmore." + item.getType().toString().toLowerCase().replace("_", "") + "." + nameByEnch.get(ench).replace(" ", "").toLowerCase();
+		return "enchantmore." + item.getType().toString().toLowerCase().replace("_", "").replace(" ", "") + "." + nameByEnch.get(ench).replace(" ", "").replace(" ", "").toLowerCase();
 	}
 	
 	public static int getLevel(ItemStack item, Enchantment ench) { //Get the enchantment level
