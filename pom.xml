@@ -4,18 +4,17 @@
   <artifactId>EnchantMore</artifactId>
   <name>EnchantMore</name>
   <properties>
-      <project.version>2.5-SNAPSHOT</project.version>
       <worldguard.version>5.8.1-SNAPSHOT</worldguard.version>
       <worldedit.version>5.5.8-SNAPSHOT</worldedit.version>
       <minecraft.version>1.6.4</minecraft.version>
-      <craftbukkit.version>R0.1</craftbukkit.version>
+      <craftbukkit.version>R2.1</craftbukkit.version>
       <cb_package>v1_6_R3</cb_package>
       <main.class>io.github.dsh105.enchantmore.EnchantMore</main.class>
   </properties>
-  <version>${project.version}</version>
+  <version>2.5-SNAPSHOT</version>
   <build>
         <defaultGoal>clean package install</defaultGoal>
-        <finalName>EnchantMore</finalName>
+        <finalName>${name}-${project.version}</finalName>
         <sourceDirectory>${basedir}/src/main/java</sourceDirectory>
         <resources>
             <resource>
