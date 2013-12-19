@@ -1,6 +1,8 @@
 package io.github.dsh105.enchantmore;
 
-import net.minecraft.server.v1_6_R3.Packet63WorldParticles;
+import io.github.dsh105.dshutils.Particle;
+import io.github.dsh105.dshutils.util.GeneralUtil;
+import io.github.dsh105.dshutils.util.ReflectionUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -21,7 +23,6 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.player.*;
 import org.bukkit.inventory.*;
-import org.bukkit.inventory.meta.FireworkMeta;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
@@ -31,7 +32,6 @@ import org.bukkit.util.BlockIterator;
 import org.bukkit.util.Vector;
 
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -737,7 +737,7 @@ public class EnchantMoreListener implements Listener {
         return null;
     }
 
-    public void fireworkEffect(String effects, World world, Location loc) {
+    public void fireworkEffect(String effects, Location loc) {
         ArrayList<Color> colors = new ArrayList<Color>();
         boolean flicker = false;
         boolean trail = false;
@@ -827,90 +827,7 @@ public class EnchantMoreListener implements Listener {
                 .with(type)
                 .build();
 
-        try {
-            playFirework(world, loc, fe);
-        } catch (Exception e) {
-        }
-    }
-
-    private static Object[] dataStore = new Object[5];
-
-    public static void playFirework(World world, Location loc, FireworkEffect fe) throws Exception {
-        Firework fw = (Firework) world.spawn(loc, Firework.class);
-        if (dataStore[0] == null) dataStore[0] = getMethod(world.getClass(), "getHandle");
-        if (dataStore[2] == null) dataStore[2] = getMethod(fw.getClass(), "getHandle");
-        dataStore[3] = ((Method) dataStore[0]).invoke(world, (Object[]) null);
-        dataStore[4] = ((Method) dataStore[2]).invoke(fw, (Object[]) null);
-        if (dataStore[1] == null) dataStore[1] = getMethod(dataStore[3].getClass(), "broadcastEntityEffect");
-        FireworkMeta data = (FireworkMeta) fw.getFireworkMeta();
-        data.addEffect(fe);
-        fw.setFireworkMeta(data);
-        ((Method) dataStore[1]).invoke(dataStore[3], new Object[]{dataStore[4], (byte) 17});
-        fw.remove();
-    }
-
-    private static Method getMethod(Class<?> cl, String method) {
-        for (Method m : cl.getMethods()) if (m.getName().equals(method)) return m;
-        return null;
-    }
-
-    public static void setValue(Object instance, String fieldName, Object value) throws Exception {
-        Field field = instance.getClass().getDeclaredField(fieldName);
-        field.setAccessible(true);
-        field.set(instance, value);
-    }
-
-    public static void sendPacketToLocation(Location loc, Object packet) {
-        for (Player p : Bukkit.getOnlinePlayers()) {
-            if (p.getWorld() == loc.getWorld()) {
-				/*if(((loc.getX() + 35) > loc.getX() || loc.getX() > (loc.getX() - 35)) || ((loc.getZ() + 35) > loc.getZ() || loc.getZ() > (loc.getZ() - 35)) || ((loc.getY() + 35) > loc.getY() || loc.getY() > (loc.getY() - 35))){
-					try {
-						Method getHandle = p.getClass().getMethod("getHandle");
-						Object nmsPlayer = getHandle.invoke(p);
-						Field con_field = nmsPlayer.getClass().getField("playerConnection");
-						Object con = con_field.get(nmsPlayer);
-						Method packet_method = getMethod(con.getClass(), "sendPacket");
-						packet_method.invoke(con, packet);
-					} catch (Exception e) {}
-				}*/
-                try {
-                    Method getHandle = p.getClass().getMethod("getHandle");
-                    Object nmsPlayer = getHandle.invoke(p);
-                    Field con_field = nmsPlayer.getClass().getField("playerConnection");
-                    Object con = con_field.get(nmsPlayer);
-                    Method packet_method = getMethod(con.getClass(), "sendPacket");
-                    packet_method.invoke(con, packet);
-                } catch (Exception e) {
-                }
-            }
-            try {
-                Method getHandle = p.getClass().getMethod("getHandle");
-                Object nmsPlayer = getHandle.invoke(p);
-                Field con_field = nmsPlayer.getClass().getField("playerConnection");
-                Object con = con_field.get(nmsPlayer);
-                Method packet_method = getMethod(con.getClass(), "sendPacket");
-                packet_method.invoke(con, packet);
-            } catch (Exception e) {
-            }
-        }
-    }
-
-    public String capitalise(String s) {
-        String finalString = "";
-        if (s.contains(" ")) {
-            StringBuilder builder = new StringBuilder();
-            String[] sp = s.split(" ");
-            for (String string : sp) {
-                string = string.substring(0, 1).toUpperCase() + string.substring(1).toLowerCase();
-                builder.append(string);
-                builder.append(" ");
-            }
-            builder.deleteCharAt(builder.length() - 1);
-            finalString = builder.toString();
-        } else {
-            finalString = s.substring(0, 1).toUpperCase() + s.substring(1).toLowerCase();
-        }
-        return finalString;
+        ReflectionUtil.spawnFirework(loc, fe);
     }
 
     //Events
@@ -1235,7 +1152,7 @@ public class EnchantMoreListener implements Listener {
                     world.createExplosion(block.getLocation(), power, true);
                     damage(item, player);
                     if (getConfigBoolean("fireworkEffect", false, item, SHARPNESS)) {
-                        fireworkEffect(getConfigString("fwCharacteristics", "trail:blue:aqua:small", item, SHARPNESS), world, block.getLocation());
+                        fireworkEffect(getConfigString("fwCharacteristics", "trail:blue:aqua:small", item, SHARPNESS), block.getLocation());
                     }
                 }
             }
@@ -1654,19 +1571,9 @@ public class EnchantMoreListener implements Listener {
                         animal.setAdult();
 
                         try {
-                            Packet63WorldParticles packet = new Packet63WorldParticles();
-                            setValue(packet, "a", "heart");
-                            setValue(packet, "b", (float) entity.getLocation().getX());
-                            setValue(packet, "c", (float) entity.getLocation().getY());
-                            setValue(packet, "d", (float) entity.getLocation().getZ());
-                            setValue(packet, "e", 0.5f);
-                            setValue(packet, "f", 1f);
-                            setValue(packet, "g", 0.5f);
-                            setValue(packet, "h", 0f);
-                            setValue(packet, "i", 20);
-                            sendPacketToLocation(animal.getLocation(), packet);
+                            Particle.HEART.sendTo(entity.getLocation());
                         } catch (Exception e) {
-                            plugin.getLogger().info("Exception creating particle effect. Report to developer (Java:1526)");
+                            plugin.getLogger().info("Exception creating particle effect.");
                             e.printStackTrace();
                         }
                     }
@@ -1679,7 +1586,7 @@ public class EnchantMoreListener implements Listener {
             if (hasEnch(item, FIRE_PROTECTION, player)) {
                 player.sendMessage(ChatColor.DARK_AQUA + "-------- EnchantMore Block Information --------");
                 player.sendMessage(ChatColor.DARK_AQUA + "Entity ID: " + ChatColor.AQUA + entity.getEntityId());
-                player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + capitalise(entity.getType().toString().toLowerCase().replace("_", " ")));
+                player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + GeneralUtil.capitalise(entity.getType().toString().toLowerCase().replace("_", " ")));
                 player.sendMessage(ChatColor.DARK_AQUA + "Ticks Lived: " + ChatColor.AQUA + entity.getTicksLived());
                 player.sendMessage(ChatColor.DARK_AQUA + "Passenger: " + ChatColor.AQUA + (entity.getPassenger() == null ? "None" : entity.getPassenger()));
                 if (entity instanceof Animals) {
