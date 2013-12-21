@@ -1,7 +1,7 @@
 package io.github.dsh105.enchantmore;
 
 import io.github.dsh105.dshutils.Particle;
-import io.github.dsh105.dshutils.util.GeneralUtil;
+import io.github.dsh105.dshutils.util.StringUtil;
 import io.github.dsh105.dshutils.util.ReflectionUtil;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -1586,7 +1586,7 @@ public class EnchantMoreListener implements Listener {
             if (hasEnch(item, FIRE_PROTECTION, player)) {
                 player.sendMessage(ChatColor.DARK_AQUA + "-------- EnchantMore Block Information --------");
                 player.sendMessage(ChatColor.DARK_AQUA + "Entity ID: " + ChatColor.AQUA + entity.getEntityId());
-                player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + GeneralUtil.capitalise(entity.getType().toString().toLowerCase().replace("_", " ")));
+                player.sendMessage(ChatColor.DARK_AQUA + "Type: " + ChatColor.AQUA + StringUtil.capitalise(entity.getType().toString().toLowerCase().replace("_", " ")));
                 player.sendMessage(ChatColor.DARK_AQUA + "Ticks Lived: " + ChatColor.AQUA + entity.getTicksLived());
                 player.sendMessage(ChatColor.DARK_AQUA + "Passenger: " + ChatColor.AQUA + (entity.getPassenger() == null ? "None" : entity.getPassenger()));
                 if (entity instanceof Animals) {
