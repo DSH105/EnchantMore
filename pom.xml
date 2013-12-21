@@ -3,7 +3,7 @@
   <groupId>io.github.dsh105</groupId>
   <artifactId>EnchantMore</artifactId>
   <name>EnchantMore</name>
-  <version>2.5</version>
+  <version>2.6-SNAPSHOT</version>
   <properties>
       <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
       <dshutils.version>1.0-SNAPSHOT</dshutils.version>
