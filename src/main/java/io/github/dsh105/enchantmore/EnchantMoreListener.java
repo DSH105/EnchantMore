@@ -3,14 +3,15 @@ package io.github.dsh105.enchantmore;
 import io.github.dsh105.dshutils.Particle;
 import io.github.dsh105.dshutils.util.GeneralUtil;
 import io.github.dsh105.dshutils.util.ReflectionUtil;
+
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_6_R3.CraftWorld;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftArrow;
-import org.bukkit.craftbukkit.v1_6_R3.entity.CraftPlayer;
-import org.bukkit.craftbukkit.v1_6_R3.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -487,8 +488,8 @@ public class EnchantMoreListener implements Listener {
                 z = loc.getBlockZ();
         World world = loc.getWorld();
         ItemStack boneMeal = (new ItemStack(Material.INK_SACK, 1, (short) 15));
-        net.minecraft.server.v1_6_R3.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
-        net.minecraft.server.v1_6_R3.Item.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer) player).getHandle(), ((CraftWorld) world).getHandle(), x, y, z, 0, x, y, z);
+        net.minecraft.server.v1_7_R1.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
+        net.minecraft.server.v1_7_R1.Items.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer) player).getHandle(), ((CraftWorld) world).getHandle(), x, y, z, 0, x, y, z);
     }
 
     private String serialiseLocation(Location loc) { //Automagically transform a location into a String. Magic ain't it?
@@ -2668,13 +2669,13 @@ public class EnchantMoreListener implements Listener {
     public Block getArrowHit(Arrow arrow) {
         World world = arrow.getWorld();
 
-        net.minecraft.server.v1_6_R3.EntityArrow entityArrow = ((CraftArrow) arrow).getHandle();
+        net.minecraft.server.v1_7_R1.EntityArrow entityArrow = ((CraftArrow) arrow).getHandle();
 
         try {
             // saved to NBT tag as xTile,yTile,zTile
-            Field fieldX = net.minecraft.server.v1_6_R3.EntityArrow.class.getDeclaredField("d");
-            Field fieldY = net.minecraft.server.v1_6_R3.EntityArrow.class.getDeclaredField("e");
-            Field fieldZ = net.minecraft.server.v1_6_R3.EntityArrow.class.getDeclaredField("f");
+            Field fieldX = net.minecraft.server.v1_7_R1.EntityArrow.class.getDeclaredField("d");
+            Field fieldY = net.minecraft.server.v1_7_R1.EntityArrow.class.getDeclaredField("e");
+            Field fieldZ = net.minecraft.server.v1_7_R1.EntityArrow.class.getDeclaredField("f");
 
             fieldX.setAccessible(true);
             fieldY.setAccessible(true);
