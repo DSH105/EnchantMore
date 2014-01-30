@@ -28,7 +28,7 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.github.dsh105</groupId>
+            <groupId>com.dsh105</groupId>
             <artifactId>DSHUtils</artifactId>
             <version>${dshutils.version}</version>
         </dependency>
@@ -124,12 +124,12 @@
                             <minimizeJar>true</minimizeJar>
                             <artifactSet>
                                 <includes>
-                                    <include>io.github.dsh105:DSHUtils</include>
+                                    <include>com.dsh105:DSHUtils</include>
                                 </includes>
                             </artifactSet>
                             <relocations>
                                 <relocation>
-                                    <pattern>io.github.dsh105.dshutils</pattern>
+                                    <pattern>com.dsh105.dshutils</pattern>
                                     <shadedPattern>io.github.dsh105.enchantmore.libraries.dshutils</shadedPattern>
                                 </relocation>
                             </relocations>

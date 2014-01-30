@@ -1,8 +1,8 @@
 package io.github.dsh105.enchantmore;
 
-import io.github.dsh105.dshutils.Particle;
-import io.github.dsh105.dshutils.util.StringUtil;
-import io.github.dsh105.dshutils.util.ReflectionUtil;
+import com.dsh105.dshutils.Particle;
+import com.dsh105.dshutils.util.StringUtil;
+import com.dsh105.dshutils.util.ReflectionUtil;
 
 import org.bukkit.*;
 import org.bukkit.block.Block;
