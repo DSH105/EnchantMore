@@ -1571,12 +1571,7 @@ public class EnchantMoreListener implements Listener {
                     if (!animal.isAdult()) {
                         animal.setAdult();
 
-                        try {
-                            Particle.HEART.sendTo(entity.getLocation());
-                        } catch (Exception e) {
-                            plugin.getLogger().info("Exception creating particle effect.");
-                            e.printStackTrace();
-                        }
+                        Particle.HEART.sendTo(entity.getLocation());
                     }
                 }
 
