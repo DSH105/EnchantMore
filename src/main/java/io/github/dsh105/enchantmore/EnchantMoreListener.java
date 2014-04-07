@@ -8,10 +8,10 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.configuration.MemorySection;
-import org.bukkit.craftbukkit.v1_7_R1.inventory.CraftItemStack;
-import org.bukkit.craftbukkit.v1_7_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftArrow;
-import org.bukkit.craftbukkit.v1_7_R1.entity.CraftPlayer;
+import org.bukkit.craftbukkit.v1_7_R2.inventory.CraftItemStack;
+import org.bukkit.craftbukkit.v1_7_R2.CraftWorld;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftArrow;
+import org.bukkit.craftbukkit.v1_7_R2.entity.CraftPlayer;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -27,6 +27,7 @@ import org.bukkit.inventory.*;
 import org.bukkit.potion.Potion;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.BlockIterator;
@@ -488,8 +489,8 @@ public class EnchantMoreListener implements Listener {
                 z = loc.getBlockZ();
         World world = loc.getWorld();
         ItemStack boneMeal = (new ItemStack(Material.INK_SACK, 1, (short) 15));
-        net.minecraft.server.v1_7_R1.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
-        net.minecraft.server.v1_7_R1.Items.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer) player).getHandle(), ((CraftWorld) world).getHandle(), x, y, z, 0, x, y, z);
+        net.minecraft.server.v1_7_R2.ItemStack craftBoneMeal = CraftItemStack.asNMSCopy(boneMeal);
+        net.minecraft.server.v1_7_R2.Items.INK_SACK.interactWith(craftBoneMeal, ((CraftPlayer) player).getHandle(), ((CraftWorld) world).getHandle(), x, y, z, 0, x, y, z);
     }
 
     private String serialiseLocation(Location loc) { //Automagically transform a location into a String. Magic ain't it?
@@ -2083,7 +2084,7 @@ public class EnchantMoreListener implements Listener {
         }
 
         Arrow arrow = (Arrow) entity;
-        LivingEntity shooter = arrow.getShooter();
+        ProjectileSource shooter = arrow.getShooter();
 
         if (shooter == null || !(shooter instanceof Player)) {
             // shot from dispenser, skeleton, etc.
@@ -2593,7 +2594,7 @@ public class EnchantMoreListener implements Listener {
             return;
         }
         Arrow arrow = (Arrow) projectile;
-        LivingEntity shooter = arrow.getShooter();
+        ProjectileSource shooter = arrow.getShooter();
         if (shooter == null) {
             // can be null if "shot from dispenser"
             return;
@@ -2664,13 +2665,13 @@ public class EnchantMoreListener implements Listener {
     public Block getArrowHit(Arrow arrow) {
         World world = arrow.getWorld();
 
-        net.minecraft.server.v1_7_R1.EntityArrow entityArrow = ((CraftArrow) arrow).getHandle();
+        net.minecraft.server.v1_7_R2.EntityArrow entityArrow = ((CraftArrow) arrow).getHandle();
 
         try {
             // saved to NBT tag as xTile,yTile,zTile
-            Field fieldX = net.minecraft.server.v1_7_R1.EntityArrow.class.getDeclaredField("d");
-            Field fieldY = net.minecraft.server.v1_7_R1.EntityArrow.class.getDeclaredField("e");
-            Field fieldZ = net.minecraft.server.v1_7_R1.EntityArrow.class.getDeclaredField("f");
+            Field fieldX = net.minecraft.server.v1_7_R2.EntityArrow.class.getDeclaredField("d");
+            Field fieldY = net.minecraft.server.v1_7_R2.EntityArrow.class.getDeclaredField("e");
+            Field fieldZ = net.minecraft.server.v1_7_R2.EntityArrow.class.getDeclaredField("f");
 
             fieldX.setAccessible(true);
             fieldY.setAccessible(true);
