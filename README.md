@@ -136,4 +136,4 @@ Also interested in new potions? Try [PotionsPlus](http://dev.bukkit.org/server-m
 
 ## GitHub
 
-[Fork me on GitHub!](https://github.com/DSH105/EnchantMore)
+[Fork me on GitHub!](https://github.com/DSH105/EnchantMore/fork)
